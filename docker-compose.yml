@@ -35,7 +35,7 @@ services:
       BUNDLE_FROZEN: "0"
   worker:
     build: .
-    command: bundle exec sidekiq
+    command: bundle exec sidekiq -C config/sidekiq.yml
     volumes:
       - .:/rails
     depends_on:
