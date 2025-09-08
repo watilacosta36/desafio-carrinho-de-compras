@@ -10,7 +10,10 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       resources :products
-      resources :carts, only: %i[create]
+      resource :cart, only: %i[create show], controller: 'carts'
+
+      post 'cart/add_item', to: 'carts#add_item'
+      delete 'cart/:product_id', to: 'carts#remove_item'
     end
   end
 end

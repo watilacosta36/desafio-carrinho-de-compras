@@ -20,6 +20,8 @@ services:
   web:
     build: .
     command: bash -c "bundle exec rails db:prepare && bundle exec rails s -b 0.0.0.0 -p 3000"
+    stdin_open: true
+    tty: true
     volumes:
       - .:/rails
     ports:
