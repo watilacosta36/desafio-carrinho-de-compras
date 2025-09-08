@@ -19,21 +19,30 @@ RSpec.describe Cart, type: :model do
     it { should have_many(:products).through(:cart_items) }
   end
 
-  describe 'mark_as_abandoned' do
-    let(:shopping_cart) { create(:cart) }
+  describe 'mark_inactive_as_abandoned' do
+    let!(:inactive_cart)          { create(:cart, abandoned: false, last_interaction_at: 4.hours.ago) }
+    let!(:active_cart)            { create(:cart, abandoned: false, last_interaction_at: 1.hour.ago) }
+    let!(:already_abandoned_cart) { create(:cart, abandoned: true, last_interaction_at: 5.hours.ago) }
 
-    it 'marks the shopping cart as abandoned if inactive for a certain time' do
-      shopping_cart.update(last_interaction_at: 3.hours.ago)
-      expect { shopping_cart.mark_as_abandoned }.to change { shopping_cart.abandoned? }.from(false).to(true)
+    it 'marks only inactive, non-abandoned carts as abandoned' do
+      described_class.mark_inactive_as_abandoned
+
+      expect(inactive_cart.reload.abandoned).to be_truthy
+      expect(active_cart.reload.abandoned).to be_falsey
+      expect(already_abandoned_cart.reload.abandoned).to be_truthy
     end
   end
 
-  describe 'remove_if_abandoned' do
-    let(:shopping_cart) { create(:cart, last_interaction_at: 7.days.ago) }
+  describe 'remove_old_abandoned' do
+    let!(:old_abandoned_cart)    { create(:cart, abandoned: true, updated_at: 8.days.ago) }
+    let!(:recent_abandoned_cart) { create(:cart, abandoned: true, updated_at: 1.day.ago) }
+    let!(:active_cart)           { create(:cart, abandoned: false, updated_at: 10.days.ago) }
 
-    it 'removes the shopping cart if abandoned for a certain time' do
-      shopping_cart.mark_as_abandoned
-      expect { shopping_cart.remove_if_abandoned }.to change { Cart.count }.by(-1)
+    it 'removes only old abandoned carts' do
+      expect { described_class.remove_old_abandoned }.to change(Cart, :count).by(-1)
+      expect(Cart.exists?(old_abandoned_cart.id)).to be_falsey
+      expect(Cart.exists?(recent_abandoned_cart.id)).to be_truthy
+      expect(Cart.exists?(active_cart.id)).to be_truthy
     end
   end
 end
