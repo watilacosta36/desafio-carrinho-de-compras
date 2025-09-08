@@ -9,7 +9,7 @@ class FindOrCreateCart
     cart = Cart.find_by(id: cart_id)
 
     if cart.nil?
-      cart = Cart.create(total_price: 0)
+      cart = Cart.create(total_price: 0, last_interaction_at: Time.zone.now)
       context.session[:cart_id] = cart.id
     end
 

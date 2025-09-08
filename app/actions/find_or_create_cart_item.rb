@@ -22,6 +22,9 @@ class FindOrCreateCartItem
       )
     end
 
+    cart.last_interaction_at = Time.zone.now
+    cart.save
+
     unless cart_item.save
       context.fail!('Could not save cart item', error_code: :unprocessable_entity)
     end

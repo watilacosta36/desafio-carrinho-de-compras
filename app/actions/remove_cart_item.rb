@@ -20,6 +20,9 @@ class RemoveCartItem
       cart_item.destroy!
     end
 
+    cart.last_interaction_at = Time.zone.now
+    cart.save
+
     context.cart = cart
   end
 end
