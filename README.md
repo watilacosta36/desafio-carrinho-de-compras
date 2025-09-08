@@ -216,3 +216,19 @@ bundle exec rspec
 
 ### Como enviar seu projeto
 Salve seu código em um versionador de código (GitHub, GitLab, Bitbucket) e nos envie o link publico. Se achar necessário, informe no README as instruções para execução ou qualquer outra informação relevante para correção/entendimento da sua solução.
+
+### EXECUTANDO O APP VIA DOCKER
+Você deve ter docker e docker-compose instalados em sua máquina.
+
+1. **Construir e iniciar os contêinaers:**
+
++    docker compose up --build -d
+
+2. **Executar os tests**
+
++    docker-compose run --rm test
+
+3.  **Parar a aplicação**
+
++    docker-compose down
++    
