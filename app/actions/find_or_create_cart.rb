@@ -1,4 +1,4 @@
-class FindOrInitializeCart
+class FindOrCreateCart
   extend ::LightService::Action
 
   expects :session
@@ -9,7 +9,7 @@ class FindOrInitializeCart
     cart = Cart.find_by(id: cart_id)
 
     if cart.nil?
-      cart = Cart.create_with(total_price: 0)
+      cart = Cart.create(total_price: 0)
       context.session[:cart_id] = cart.id
     end
 

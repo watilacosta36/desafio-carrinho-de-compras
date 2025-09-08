@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class RemoveCartItemOrganizer
+class CreateCartOrganizer
   extend LightService::Organizer
 
   def self.call(params, session)
@@ -8,9 +8,9 @@ class RemoveCartItemOrganizer
       params: params,
       session: session
     ).reduce(
-      FindProduct,
-      FindCart,
-      RemoveCartItem,
+      FindOrCreateCart,
+      ValidateProductQuantity,
+      FindOrCreateCartItem,
       CalculateTotalPrice,
       BuildCartPayload
     )

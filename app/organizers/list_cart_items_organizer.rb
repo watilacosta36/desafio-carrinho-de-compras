@@ -1,18 +1,13 @@
 # frozen_string_literal: true
 
-
 class ListCartItemsOrganizer
   extend LightService::Organizer
 
-  def self.call(params, session)
+  def self.call(session)
     with(
-      params: params,
-      session: session
+      session: session,
     ).reduce(
       FindOrCreateCart,
-      ValidateProductQuantity,
-      FindOrCreateCartItem,
-      CalculateTotalPrice,
       BuildCartPayload
     )
   end
