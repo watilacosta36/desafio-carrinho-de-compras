@@ -36,4 +36,4 @@
 /vendor/*
 
 # idea
-.idea/
+.idea/*
